@@ -43,7 +43,7 @@ public:
 	int sum() {
 		int sum = 0;
 		for (int i = 0; i < rollNum; i++) {
-			int roll = trueRandomGenerator();
+			int roll = trueRandomGenerator() + 1;
 			sum += roll;
 		}
 		return sum + modificator;
@@ -66,13 +66,13 @@ void showResults(vector<int> results) {
 
 
 int main() {
-	vector<int> results {0, 0, 0, 0, 0, 0};
-	string roll = "1d6";
+	vector<int> results (6);
+	string roll = "1d60";
 	DiceRoll experiment(roll);
 	int rollsCount = 1000000;
 	for (int i = 0; i < rollsCount; i++) {
 		int res = experiment.sum();
-		results[res] += 1;
+		results[res-1] += 1;
 	}
 	showResults(results);
 	exit(0);
