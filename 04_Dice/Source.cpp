@@ -66,8 +66,8 @@ void showResults(vector<int> results) {
 
 
 int main() {
-	vector<int> results (6);
-	string roll = "1d60";
+	vector<int> results(6);
+	string roll = "1d6";
 	DiceRoll experiment(roll);
 	int rollsCount = 1000000;
 	for (int i = 0; i < rollsCount; i++) {
