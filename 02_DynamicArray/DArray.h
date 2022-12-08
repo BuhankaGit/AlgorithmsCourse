@@ -1,5 +1,8 @@
+#pragma once
 #include <iostream>
 #include <stdlib.h>
+#ifndef DARRAY_H
+#define DARRAY_H
 
 template<typename T>
 class DArray final
@@ -12,25 +15,18 @@ private:
 public:
 	class Iterator {
 	private:
-		T* first;
-		T* last;
-		T* current;
+		int current;
+		DArray* arr;
 		bool isForward;
 	public:
-		Iterator(T* start, T* end, bool isForward) {
+		Iterator(DArray* array, bool isForward) {
 			this->isForward = isForward;
-			if (isForward) {
-				first = current = start;
-				last = end;
-			}
-			else {
-				first = start;
-				last = current = end;
-			}
+			current = isForward ? 0 : array -> size()-1;
+			arr = array;
 		}
 
 		const T& get() const {
-			return *current;
+			return (*arr)[current];
 		};
 
 		void next() {
@@ -39,32 +35,33 @@ public:
 		};
 
 		void set(const T& value) {
-			*current = value;
+			(*arr)[current] = value;
 		}
 
 		bool hasNext() const {
-			T edgeEl;
-			if (isForward) {
-				return current != last;
-			}
-			else {
-				return  current != first;
-			}
+			if (isForward) return (current + 1) < arr -> size();
+			else return (current - 1) >= 0;
 		}
 	};
 
 	DArray();
 	DArray(int capacity);
+	DArray(const DArray& other);
+	DArray(DArray<T>&& other) noexcept;
+	~DArray();
 
 	void resize(int newSize);
 	int insert(const T& value);
 	int insert(int index, const T& value);
 	void remove(int index);
+	int size();
+
 	Iterator iterator() {
-		return Iterator(array, array + length - 1, true);
+		return Iterator(this, true);
 	};
+
 	Iterator reverseIterator() {
-		return Iterator(array, array + length - 1, false);
+		return Iterator(this, false);
 	};
 
 	T& operator [](int index)
@@ -72,21 +69,42 @@ public:
 		return array[index];
 	};
 
-	DArray& operator =(const DArray& second)
+	template<typename T>
+	DArray& operator=(const DArray& other)
 	{
-		if (this != &second)
+		if (this != &other)
 		{
-			capacity = second.capacity;
-			length = second.length;
-			free(array);
-			array = second.array;
+			capacity = other.capacity;
+			length = other.length;
+			array = (T*)malloc(sizeof(T) * capacity);
+			for (int i = 0; i < length; i++) {
+				new(array + i) T(other.array[i]);
+			}
 		}
 		return *this;
 	};
-	int size();
-	int getCapacity();
-	//DEBUG
-	void showData();
-	~DArray();
+
+	template<typename T>
+	DArray& operator=(DArray&& other) noexcept
+	{
+		for (int i = 0; i < length; i++) {
+			array[i].~T();
+		}
+		free(array);
+
+		capacity = other.capacity;
+		length = other.length;
+		array = other.array;
+
+		other.array = nullptr;
+		other.capacity = 8;
+		other.length = 0;
+
+		return *this;
+	};
 };
 
+#include "DArray.cpp"
+
+
+#endif

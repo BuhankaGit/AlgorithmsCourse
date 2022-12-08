@@ -1,19 +1,44 @@
 #include "DArray.h"
+#ifndef _DARRAY_CPP_
+#define _DARRAY_CPP_
 
 template<typename T>
 DArray<T>::DArray()
 {
-	this -> capacity = 8;
-	this -> length = 0;
+	this->capacity = 8;
+	this->length = 0;
 	array = (T*)malloc(sizeof(T) * capacity);
 }
 
 template<typename T>
 DArray<T>::DArray(int capacity)
 {
-	this -> capacity = capacity;
-	this -> length = 0;
+	this->capacity = capacity;
+	this->length = 0;
 	array = (T*)malloc(sizeof(T) * capacity);
+}
+
+template<typename T>
+DArray<T>::DArray(const DArray& other)
+{
+	capacity = other.capacity;
+	length = other.length;
+	array = (T*)malloc(sizeof(T) * capacity);
+	for (int i = 0; i < length; i++) {
+		new(array + i) T(other.array[i]);
+	}
+}
+
+template<typename T>
+DArray<T>::DArray(DArray&& other) noexcept
+{
+	capacity = other.capacity;
+	length = other.length;
+	free(array);
+	array = other.array;
+	other.length = 0;
+	other.capacity = 8;
+	other.array = nullptr;
 }
 
 template<typename T>
@@ -36,9 +61,9 @@ template<typename T>
 int DArray<T>::insert(const T& value)
 {
 	if (length == capacity) {
-		this -> resize(capacity * 2);
+		this->resize(capacity * 2);
 	}
-	new(array + length) T(value); 
+	new(array + length) T(value);
 	length += 1;
 	return length - 1;
 }
@@ -46,11 +71,11 @@ int DArray<T>::insert(const T& value)
 template<typename T>
 int DArray<T>::insert(int index, const T& value)
 {
-	if (index < 0 && index >= capacity) {
+	if (index < 0 || index >= length) {
 		return -1;
 	}
 	if (length == capacity) {
-		this -> resize(capacity *2);
+		this->resize(capacity * 2);
 	}
 	for (int i = length; i >= index; i--) {
 		new(array + i + 1) T(std::move(array[i]));
@@ -63,12 +88,14 @@ int DArray<T>::insert(int index, const T& value)
 template<typename T>
 void DArray<T>::remove(int index)
 {
-	if (index < 0 && index > length) {
+	if (index < 0 || index > length) {
 		return;
 	}
-	for (int i = index; i < length; i++) {
-		new(array + i) T(std::move(array[i+1]));
+	for (int i = index; i < length - 1; i++) {
+		array[i].~T();
+		new(array + i) T(std::move(array[i + 1]));
 	}
+	array[length - 1].~T();
 	length -= 1;
 }
 
@@ -79,24 +106,12 @@ int DArray<T>::size()
 }
 
 template<typename T>
-int DArray<T>::getCapacity()
-{
-	return capacity;
-}
-
-template<typename T>
-void DArray<T>::showData()
-{
-	std::cout << this->size() << std::endl;
-	std::cout << this->capacity << std::endl;
-	for (int i = 0; i < length; i++) {
-		std::cout << array[i] << std::endl;
-	}
-}
-
-template<typename T>
 DArray<T>::~DArray()
 {
+	for (int i = 0; i < length; i++) {
+		array[i].~T();
+	}
 	free(array);
 }
 
+#endif
