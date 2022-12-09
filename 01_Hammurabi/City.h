@@ -37,7 +37,7 @@ private:
 	
 public:
 	City();
-	City(int population, int wheat, int territory, int acrPrice);
+	City(int population, int wheat, int territory, int acrPrice, std::vector<int> historyData);
 	void handleRound(int wheatForConsume, int territoryForFields);
 	Result calculateResult();
 	bool ifDeseaseHappened() { return deseaseHappened; };
@@ -52,6 +52,7 @@ public:
 	int getHarvest() { return harvest; };
 	int getHarvestPerAcr() { return harvestPerTerritory; };
 	int getWheatLost() { return wheatLost; };
+	std::vector<int> getHistoryData() { return historyData; };
 	bool isFailedState() { return failedState; };
 
 	

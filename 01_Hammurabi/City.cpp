@@ -9,19 +9,20 @@ City::City()
 }
 
 /** Create city from file **/
-City::City(int population, int wheat, int territory, int acrPrice)
+City::City(int population, int wheat, int territory, int acrPrice, std::vector<int> historyData)
 {
 	this->population = population;
 	this->wheat = wheat;
 	this->territory = territory;
 	this->acrPrice = acrPrice;
+	this->historyData = historyData;
 }
 
 void City::handleRound(int wheatForConsume, int territoryForFields)
 {
 	harvestPerTerritory = std::rand() % 6 + 1;
 	feedPopulation(wheatForConsume);
-	int percentOfDeaths = round((numberOfDeaths / population) * 100);
+	int percentOfDeaths = round((static_cast<double>(numberOfDeaths) / population) * 100);
 	historyData.push_back(percentOfDeaths);
 	wheatLost = (std::rand() % 8 / 100.) * wheat;
 	wheat = wheat - wheatLost;
@@ -78,8 +79,8 @@ void City::deseaseModification() {
 }
 
 Result City::calculateResult() {
-	int P = round(territory / population);
-	double L = std::accumulate(historyData.begin(), historyData.end(), 0) / historyData.size();
+	double P = std::accumulate(historyData.begin(), historyData.end(), 0) / historyData.size();
+	int L = round(territory / population);
 	if (P > 33 || L < 7) {
 		return Result::Bad;
 	}

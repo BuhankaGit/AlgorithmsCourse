@@ -21,15 +21,23 @@ GameController::GameController()
 			CsvReader reader;
 			reader.read(filepath);
 			round = stoi(reader.getParams()[0].getValue());
+			std::vector<int> data;
+			std::vector<std::string> temp = reader.split(reader.getParams()[5].getValue(), ",");
+			for (int i = 0; i < temp.size(); i++) {
+				data.push_back(stoi(temp[i]));
+			}
 			city = City(stoi(reader.getParams()[1].getValue()), 
 				stoi(reader.getParams()[2].getValue()), 
 				stod(reader.getParams()[3].getValue()),
-				stoi(reader.getParams()[4].getValue())
+				stoi(reader.getParams()[4].getValue()),
+				data
 			);
+			break;
 		}
 		case 'n': {
 			round = 1;
 			city = City();
+			break;
 		}
 		}
 	}
@@ -44,6 +52,10 @@ void GameController::autoSave() {
 		file << "wheat:" + std::to_string(city.getWheat()) + '\n';
 		file << "territory:" + std::to_string(city.getTerritory()) + '\n';
 		file << "acrPrice:" + std::to_string(city.getAcrPrice()) + '\n';
+		file << "historyData:";
+		for (int i = 0; i < city.getHistoryData().size(); i++) {
+			file << city.getHistoryData()[i] << ",";
+		}
 	}
 	file.close();
 }
@@ -56,7 +68,8 @@ void GameController::playGame() {
 		start = false;
 		makeOrders();
 		if (city.isFailedState()) {
-			std::cout << "Game over!" << std::endl;
+			std::cout << "More than 45% of the population starved to death. You are a bad ruler..." << std::endl;
+			std::cout << "===============GAME OVER===============" << std::endl;
 			return;
 		}
 		round++;
@@ -121,7 +134,7 @@ void GameController::showRoundInfo()
 	}
 	printf("Now there are %i people living in the city\n", city.getPopulation());
 	printf("We harvested %i bushels of wheat, %i bushels per acre;\n", city.getHarvest(), city.getHarvestPerAcr());
-	printf("Rats destroyed %i bushels of wheat, leaving %f bushels in barns;\n", city.getWheatLost(), city.getWheat());
+	printf("Rats destroyed %i bushels of wheat, leaving %.1f bushels in barns;\n", city.getWheatLost(), city.getWheat());
 	printf("The city now occupies %i acres;\n", city.getTerritory());
 	printf("1 acre of land is now worth %i bushels\n", city.getAcrPrice());
 }
@@ -130,12 +143,13 @@ void GameController::showStartInfo()
 {
 	std::cout << "My Lord, allow me to congratulate you on your accession to the throne!" << std::endl;
 	printf("It is the year %i now\n", round);
-	printf("You possess: %i acres of land, %f bushels of wheat and %i people\n", city.getTerritory(), city.getWheat(), city.getPopulation());
+	printf("You possess: %i acres of land, %.1f bushels of wheat and %i people\n", city.getTerritory(), city.getWheat(), city.getPopulation());
 	printf("Current acr price: %i bushels\n", city.getAcrPrice());
 }
 
 void GameController::endGame(Result res)
 {
+	std::cout << "===============RESULTS===============" << std::endl;
 	switch (res) {
 	case Bad:
 		std::cout << "Because of your incompetence in management, the people staged a riot, and expelled you from their city." << std::endl;
