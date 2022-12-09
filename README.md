@@ -1,6 +1,6 @@
 # AlgorithmsCourse
 Works on the course Analysis and development of algorithms
-- [Done]01_Hammurabi 
+- [Done]01_Hammurabi  
   Implementation of the Hammurabi text game  
 - [Done]02_DynamicArray  
   Implementation of a dynamic array  
