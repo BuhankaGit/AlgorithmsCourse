@@ -4,7 +4,7 @@
 template<typename T, typename Compare>
 void sort(T* first, T* last, Compare comp)
 {
-    int optimSize = 4;
+    int optimSize = 10;
     while (first < last)
     {
         if (last - first < optimSize)
@@ -28,7 +28,7 @@ void sort(T* first, T* last, Compare comp)
             else 
             {
                 sort(q + 1, last, comp);
-                last = q - 1;
+                last = q;
             }
         }
     }
@@ -40,7 +40,7 @@ T* partition(T* first, T* last, Compare comp)
     T v = *(first + (last - first) / 2);
     T* i = first;
     T* j = last;
-    while (i <= j)
+    while (true)
     {
         while (comp(*i, v))
         {
@@ -55,8 +55,7 @@ T* partition(T* first, T* last, Compare comp)
         }
         std::swap(*(i++), *(j--));
     }
-    std::swap(v, *i);
-    return i;
+    return j;
 }
 
 template<typename T, typename Compare>
@@ -66,38 +65,17 @@ void insertion(T* first, T* last, Compare comp)
     {
         T* j = i - 1;
         T temp = *i;
-        while (comp(temp, *j) && (j != first))
+
+        while (j >= first && comp(temp, *(j)))
         {
             *(j + 1) = std::move(*j);
             j--;
         }
-
-        if ((j == first) && comp(temp, *j))
-        {
-            *(j + 1) = std::move(*j);
-            *j = temp;
-        }
-        else
-        {
-            *(j + 1) = temp;
-        }
+        *(j + 1) = std::move(temp);
     }
 }
 
 int main()
 {
-    std::default_random_engine gen;
-    std::uniform_int_distribution<int> distr(-1000, 1000);
-
-    const int size_arr = 1000;
-    int arr[size_arr];
-    for (int i = 0; i < size_arr; ++i)
-        arr[i] = distr(gen);
-
-    sort(arr, arr + 999, [](int a, int b) { return a > b; });
-    for (auto i = arr; i <= arr + 999; i++)
-    {
-        std::cout << *i << " ";
-    }
-    std::cout << std::endl;
+    exit(0);
 }
