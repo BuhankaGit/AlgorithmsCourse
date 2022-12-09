@@ -14,7 +14,9 @@ Additional files:
 Below you can see the output of the game. To save space, I give only 8-10 rounds.
 
 > ===============NEW ROUND===============
+>
 > It is the year 8 now;
+>
 > 0 people were starved to death, also we have 12 new citizens;
 > 
 > Now there are 79 people living in the city
