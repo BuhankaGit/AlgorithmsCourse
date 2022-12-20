@@ -7,4 +7,4 @@ The optimal length of the intervals is obtained empirically. The data and graph 
 
 Link: [data](https://docs.google.com/spreadsheets/d/1irLY2U4ibOBCi2QEWkRfwkftVZh7XyhtZ-5XnLl0ir8/edit?usp=sharing)
 
-![изображение](https://user-images.githubusercontent.com/67660146/208606877-cd479871-7352-4012-9d75-fb35cdf2bac1.png)
+![изображение](https://user-images.githubusercontent.com/67660146/208607013-731d465b-571d-47b4-8406-9087aab64614.png)
