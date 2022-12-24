@@ -1,7 +1,7 @@
 ## QuickSort
 Implementation of the QuickSort algorithm
 
-The algorithm uses the following optimization: for intervals shorter than 42, an insertion sort algorithm is used.
+The algorithm uses the following optimization: for intervals shorter than 64, an insertion sort algorithm is used.
 
 The optimal length of the intervals is obtained empirically. The data and graph are presented below
 
