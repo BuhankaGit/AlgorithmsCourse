@@ -6,7 +6,7 @@
 template<typename T, typename Compare>
 void sort(T* first, T* last, Compare comp)
 {
-    int optimSize = 42;
+    int optimSize = 64;
     while (first < last)
     {
         if (last - first < optimSize)
