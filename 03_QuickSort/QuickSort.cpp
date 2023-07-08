@@ -78,8 +78,7 @@ void insertion(T* first, T* last, Compare comp)
 }
 
 int main()
-{\
-    
+{
     /**
     std::default_random_engine gen;
     std::uniform_int_distribution<int> distr(-1000, 1000);
